@@ -1,5 +1,5 @@
 # Forecasting-and-Inventory-Planning
-# Forecasting and Inventory Planning
+
 
 ## Overview
 This project involves forecasting passenger numbers for an airline using time series analysis techniques in R. The dataset used is the "AirPassengers" dataset, which contains monthly passenger numbers from 1949 to 1960.
