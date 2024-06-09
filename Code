@@ -1,0 +1,37 @@
+# Step 1: Load forecast package into RStudio
+install.packages("forecast")
+library(forecast)
+library(readxl)
+# Step 2: Load dataset and view its class
+# Assuming the dataset is in an Excel file named "AirPassengers.xlsx"
+data <- read_excel("C:/F&I/F&I_Planning/AirPassengers.xlsx")
+# Check the class of the dataset
+class(data)
+# Step 3: Display dataset
+head(data)
+# Step 4: Check summary
+summary(data)
+# Step 5: Check for missing values
+any(is.na(data))
+# Remove any rows with missing values
+data <- na.omit(data)
+# Convert the 'Month' column to Date format
+data$Month <- as.Date(paste(data$Month, "-01", sep = ""), format = "%Y-%m-%d")
+# Step 6:  Plot the dataset
+plot(data$Month, data$`#Passengers`, type = "l", main = "AirPassengers Dataset", xlab = "Month", ylab = "#Passengers")
+# Step 7: Estimate trend using a moving average
+trend <- filter(data$`#Passengers`, rep(1/12, 12), sides = 2)
+# Step 8: Plot the dataset with trendline
+plot(data$Month, data$`#Passengers`, type = "l", main = "AirPassengers Dataset with Trendline", xlab = "Month", ylab = "#Passengers")
+lines(data$Month, trend, col = "red")
+# Step 9 : Create a univariate time series object
+passengers_ts <- ts(data$`#Passengers`, frequency = 12, start = c(1949, 1))
+# Apply auto.arima to the univariate time series
+arima_model <- auto.arima(passengers_ts)
+summary(arima_model)
+# Step 10: Forecast the values for the next 10 years
+forecast_values <- forecast(arima_model, h = 120)
+plot(forecast_values, main = "Forecasted AirPassengers for Next 10 Years")
+# Step 11: Validate the model by selecting lag values
+# You can use the accuracy function to assess the accuracy of the model
+accuracy(arima_model)
